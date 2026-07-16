@@ -10,7 +10,8 @@ const config = {
     OTP_TTL: Number(process.env.OTP_TTL) || 300,
     MAIL_SEND: process.env.MAIL_SEND || "adityasharma_it24b01_015@dtu.ac.in",
     APP_URL: process.env.APP_URL || "http://localhost:4001",
-    ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS || "http://localhost:4001"
+    ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS || "http://localhost:4001",
+    OTP_MAX_VERIFY_ATTEMPTS: process.env.OTP_MAX_VERIFY_ATTEMPTS || 5 ,
 };
 
 module.exports = { config };
