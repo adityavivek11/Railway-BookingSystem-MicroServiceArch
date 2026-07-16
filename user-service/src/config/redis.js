@@ -1,7 +1,7 @@
 const Redis = require('ioredis');
 const { config } = require('.');
 const logger = require('./logger');
-
+//need to check this , whether  this is correct 
 // Singleton Redis client instance with event logging. No use of constructor , as it will give a new instance everytime.
 class RedisClient {
   static instance;

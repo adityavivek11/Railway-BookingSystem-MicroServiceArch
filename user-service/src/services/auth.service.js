@@ -1,11 +1,11 @@
 const { ConflictError } = require("../utils/error")
-const {generateAndStoreOtp} = require('../utils/otp')
+const {generateAndStoreOtp} = require("../utils/otp")
 const {sendOtpEmail} = require('../utils/email')
 const bcrypt =  require('bcrypt')
 const prisma = require('../config/prisma')
 
 const sendOTP = async (firstName , lastName , email , password) =>{
-    const existingUser = await Prisma.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
         where : {email}
     })
 

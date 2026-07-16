@@ -11,10 +11,14 @@ const minutes = (config.OTP_TTL || 300) / 60;
  * Sends an OTP verification code to the user's email.
  */
 async function sendOtpEmail(email, otp) {
+  if (!config.MAIL_SEND) {
+    throw new Error('MAIL_SEND is not configured');
+  }
+
   const msg = {
     to: email,
-    from: `${config.MAIL_SEND}`,
-    subject: 'Your DesignKarle verification code',
+    from: config.MAIL_SEND,
+    subject: 'Your Railway Booking System verification code',
     html: `
       <div style="
         font-family: Arial, sans-serif;
@@ -64,9 +68,13 @@ async function sendOtpEmail(email, otp) {
  * Sends a confirmation email after the OTP has been successfully verified.
  */
 async function verifyOtpEmail(meta) {
+  if (!config.MAIL_SEND) {
+    throw new Error('MAIL_SEND is not configured');
+  }
+
   const msg = {
     to: meta.email,
-    from: `${config.MAIL_SEND}`,
+    from: config.MAIL_SEND,
     subject: 'Welcome to DesignKarle - Verification Successful!',
     html: `
       <div style="

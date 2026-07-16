@@ -1,6 +1,6 @@
 const asyncHandler = require("../utils/asyncHandler");
 const { BadRequestError } = require("../utils/error");
-const config = require('../config') ;
+const { config } = require('../config') ;
 const authService = require('../services/auth.service') ;
 
 exports.sendOTP  = asyncHandler(async(req,res) =>{
