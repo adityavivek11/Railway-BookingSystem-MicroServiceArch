@@ -3,6 +3,7 @@ const { generateAndStoreOtp, verifyOTP: verifyOtpToken } = require("../utils/otp
 const {sendOtpEmail, verifyOtpEmail} = require('../utils/email')
 const bcrypt =  require('bcrypt')
 const prisma = require('../config/prisma')
+const { generateAccessToken, generateRefreshToken } = require("../utils/auth")
 
 const sendOTP = async (firstName , lastName , email , password) =>{
     const existingUser = await prisma.user.findUnique({
@@ -42,5 +43,27 @@ const verifyOTP = async function(otp , otpSessionId){
     await verifyOtpEmail(meta) ;
     return user ;
 
+}
+
+
+const login = async(email, password, deviceId)=>{
+    const existingUser = await prisma.user.findUnique({
+        where:{
+            email
+        }
+    })
+
+    if(!existingUser){
+        throw new BadRequestError("Email Not Found") ;
+    }
+
+    const doesPasswordMatch = await bcrypt.compare(password, existingUser.password) ;
+    if(!doesPasswordMatch){
+        throw new BadRequestError("Incorrect Password") ;
+    }
+
+    const accessToken = generateAccessToken(existingUser.id) ;
+    const refreshToken = generateRefreshToken(existingUser.id) ;
+    
 }
 module.exports = {sendOTP, verifyOTP}

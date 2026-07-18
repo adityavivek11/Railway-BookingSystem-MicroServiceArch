@@ -2,6 +2,7 @@ const asyncHandler = require("../utils/asyncHandler");
 const { BadRequestError } = require("../utils/error");
 const { config } = require('../config') ;
 const authService = require('../services/auth.service') ;
+const { getDeviceFingerprint } = require("../utils/deviceFingerprint");
 
 exports.sendOTP  = asyncHandler(async(req,res) =>{
     const { firstName , lastName , email , password , confirmPassword } = req.body ;
@@ -43,4 +44,34 @@ exports.verifyOTP = asyncHandler(async(req,res) =>{
         data: user
     })
 
+})
+
+
+exports.login = asyncHandler(async(req,res) =>{
+    const {email, password} = req.body ;
+    if(!email || !password){
+        throw new BadRequestError("Email and Password are required") 
+    }
+
+    const deviceId = getDeviceFingerprint(req) ;
+    const {accessToken, refreshToken, loggedInUser} = await authService.login(email, password, deviceId) ;
+    res.cookie("accessToken", accessToken , {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: config.ACCESS_TOKEN_EXP_SEC * 1000
+    })
+
+    res.cookie("refreshToken", refreshToken , {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: config.REFRESH_TOKEN_EXP_SEC * 1000
+    })
+
+    res.status(200).json({
+        success: true,
+        message: "Logged in successfully",
+        loggedInUser
+    })
 })
