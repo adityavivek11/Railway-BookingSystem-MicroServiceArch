@@ -1,3 +1,6 @@
+const jwt = require("jsonwebtoken") ;
+const {config} = require("../config") ;
+
 exports.generateAccessToken = (userId) => {
     const payload = {
         id: userId
